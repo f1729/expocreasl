@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ExpoCrea SL</title>
+  <link rel="shortcut icon" href="./expo.ico">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+  <style type="text/css">
+    body {
+      background-color: black;
+      margin: 0px;
+      /*font-family:Arial;*/
+      font-size: 16px;
+      color:#EEE;
+      /*font-family: 'Paytone One', sans-serif;*/
+      font-family: 'Basic', sans-serif;
+
+    }
+
+    a {
+      color:#0078ff;
+    }
+
+    #info {
+      color: #fff;
+      position: absolute;
+      top: 0px; width: 100%;
+      padding: 5px;
+      z-index: 100;
+    }
+
+    #content {
+      position: absolute;
+      width: 70%;
+      margin: 30px;
+      margin-left: 15%;
+
+    }
+
+    .modal-content {
+      color: #fafafa;
+    }
+
+    h1 {
+      font-size: 80px;
+      font-weight: bold;
+    }
+
+    .modal-logo {
+      width: 60%;
+      height: auto;
+    }
+
+    .sub-content {
+      font-size: 25px;
+    }
+
+
+    /* EFECT */
+
+    /* Flash class and keyframe animation */
+    .flashit{
+      color:#ffee58;
+      /*color: #e53935;*/
+      /*-webkit-animation: flash linear 2s infinite;*/
+      /*animation: flash linear 2s infinite;*/
+    }
+    @-webkit-keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: .1; }
+      100% { opacity: 1; }
+    }
+    @keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: .1; }
+      100% { opacity: 1; }
+    }
+    /* Pulse class and keyframe animation */
+    .pulseit{
+      -webkit-animation: pulse linear .5s infinite;
+      animation: pulse linear .5s infinite;
+    }
+    @-webkit-keyframes pulse {
+      0% { width:200px; }
+      50% { width:340px; }
+      100% { width:200px; }
+    }
+    @keyframes pulse {
+      0% { width:200px; }
+      50% { width:340px; }
+      100% { width:200px; }
+    }
+  </style>
+  <!-- <link href="https://fonts.googleapis.com/css?family=Paytone+One" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css?family=Basic" rel="stylesheet">
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.js"></script>
+
+</head>
+<body>
+
+  <div class="modal is-active">
+    <!-- <div class="modal-background"></div> -->
+    <div class="modal-content" style="text-align: center">
+      <img src="./Creadores.png" class="modal-logo">
+      <h1>Expocrea SL</h1>
+      <div class="sub-content">
+        <span>Próximamente</span>  <br>
+        <span style="font-size: 18px;" class="flashit">(¿Quieres participar como expositor? Por favor <a href="https://www.facebook.com/messages/t/expocreasl">escribenos aquí</a>)</span><br>
+        <span>La primera y mas grande reunión de creadores latinos en Second Life.</span> <br>
+      </div>
+      <br>
+      <span style="font-size: 20px;">Si tienes interés por conocer que hace un diseñador, constructor, scripter, youtuber o fotógrafo, esta es la mejor oportunidad que tienes para conocer de su experiencia.</span>
+      <br>
+      <br>
+
+      <!-- Any other Bulma elements you want -->
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var container;
+    var camera, scene, renderer, particles, geometry, materials = [],
+        parameters, i, h, color, size;
+
+    var mouseX = 0,
+        mouseY = 0;
+
+    var windowHalfX = window.innerWidth / 2;
+    var windowHalfY = window.innerHeight / 2;
+
+    init();
+    animate();
+
+    function createCanvasMaterial(color, size) {
+      var matCanvas = document.createElement('canvas');
+      matCanvas.width = matCanvas.height = size;
+      var matContext = matCanvas.getContext('2d');
+      // create exture object from canvas.
+      var texture = new THREE.Texture(matCanvas);
+      // Draw a circle
+      var center = size / 2;
+      matContext.beginPath();
+      matContext.arc(center, center, size/2, 0, 2 * Math.PI, false);
+      matContext.closePath();
+      matContext.fillStyle = color;
+      matContext.fill();
+      // need to set needsUpdate
+      texture.needsUpdate = true;
+      // return a texture made from the canvas
+      return texture;
+    }
+
+    function init() {
+
+      container = document.createElement('div');
+      container.style.position = "fixed";
+      container.style.zIndex = -1;
+      document.body.appendChild(container);
+
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
+      camera.position.z = 1000;
+
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x000000, 0.0007);
+
+      geometry = new THREE.Geometry();
+
+      //geometry = THREE.SphereGeometry( 1, 2, 2 );
+
+      for (i = 0; i < 100; i++) {
+
+        var vertex = new THREE.Vector3();
+        vertex.x = Math.random() * 2000 - 1000;
+        vertex.y = Math.random() * 2000 - 1000;
+        vertex.z = Math.random() * 2000 - 1000;
+
+        geometry.vertices.push(vertex);
+
+      }
+
+     parameters = [
+        [
+          [1, 1, 0.5], 5
+        ],
+        [
+          [0.95, 1, 0.5], 4
+        ],
+        [
+          [0.0, 0.0, 1.0], 3
+        ],
+        [
+          [0.0, 1.0, 0.0], 2
+        ],
+        [
+          [1.0, 0.0, 0.0], 1
+        ]
+      ];
+
+     /*parameters = [
+        [
+          [1, 0.5, 0.9], 0.5
+        ],
+        [
+          [0.95, 0.5, 0.9], 0.4
+        ],
+        [
+          [0.90, 0.5, 0.9], 0.3
+        ],
+        [
+          [0.85, 0.5, 0.9], 0.2
+        ],
+        [
+          [0.80, 0.5, 0.9], 0.1
+        ]
+      ];*/
+
+      //var pointMaterial =  new THREE.PointsMaterial({
+        //size: 20,
+        //map: createCanvasMaterial('#00ff00', 256)
+      //});
+
+      for (i = 0; i < parameters.length; i++) {
+
+        color = parameters[i][0];
+        size = parameters[i][1];
+
+        var hexColor = new THREE.Color(color[0], color[1], color[2]).getHexString();
+
+        materials[i] = new THREE.PointsMaterial({
+          size: 20,
+          map: createCanvasMaterial('#'+hexColor, 256),
+          transparent: true,
+          depthWrite: false
+        });
+
+        particles = new THREE.Points(geometry, materials[i]);
+
+        particles.rotation.x = Math.random() * 6;
+        particles.rotation.y = Math.random() * 6;
+        particles.rotation.z = Math.random() * 6;
+
+        scene.add(particles);
+
+      }
+
+      renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+
+
+
+      document.addEventListener('mousemove', onDocumentMouseMove, false);
+      document.addEventListener('touchstart', onDocumentTouchStart, false);
+      document.addEventListener('touchmove', onDocumentTouchMove, false);
+
+      //
+
+      window.addEventListener('resize', onWindowResize, false);
+
+    }
+
+    function onWindowResize() {
+
+      windowHalfX = window.innerWidth / 2;
+      windowHalfY = window.innerHeight / 2;
+
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+    }
+
+    function onDocumentMouseMove(event) {
+
+      mouseX = event.clientX - windowHalfX;
+      mouseY = event.clientY - windowHalfY;
+
+    }
+
+    function onDocumentTouchStart(event) {
+
+      if (event.touches.length === 1) {
+
+        event.preventDefault();
+
+        mouseX = event.touches[0].pageX - windowHalfX;
+        mouseY = event.touches[0].pageY - windowHalfY;
+
+      }
+
+    }
+
+    function onDocumentTouchMove(event) {
+
+      if (event.touches.length === 1) {
+
+        event.preventDefault();
+
+        mouseX = event.touches[0].pageX - windowHalfX;
+        mouseY = event.touches[0].pageY - windowHalfY;
+
+      }
+
+    }
+
+    //
+
+    function animate() {
+
+      requestAnimationFrame(animate);
+
+      render();
+      //stats.update();
+
+    }
+
+    function render() {
+
+      var time = Date.now() * 0.00005;
+
+      camera.position.x += (mouseX - camera.position.x) * 0.05;
+      camera.position.y += (-mouseY - camera.position.y) * 0.05;
+
+      camera.lookAt(scene.position);
+
+      for (i = 0; i < scene.children.length; i++) {
+
+        var object = scene.children[i];
+
+        if (object instanceof THREE.Points) {
+
+          object.rotation.y = time * (i < 4 ? i + 1 : -(i + 1));
+
+        }
+
+      }
+
+      /*for (i = 0; i < materials.length; i++) {
+
+        color = parameters[i][0];
+
+        h = (360 * (color[0] + time) % 360) / 360;
+        materials[i].color.setHSL(h, color[1], color[2]);
+
+      }*/
+
+      renderer.render(scene, camera);
+
+    }
+  </script>
+</body>
+</html>
